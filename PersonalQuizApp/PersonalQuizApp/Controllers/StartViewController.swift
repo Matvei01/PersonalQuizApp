@@ -43,17 +43,15 @@ final class StartViewController: UIViewController {
     }
     
     private lazy var startStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            questionLabel, startPollButton
-        ])
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.distribution = .fill
-        stackView.spacing = 16
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return stackView
+        createStackView(subviews: [questionLabel, startPollButton])
     }()
+        
+    // MARK: -  Action
+    private lazy var buttonAction = UIAction { [ unowned self ] _ in
+        let questionVC = UINavigationController(rootViewController: QuestionViewController())
+        questionVC.modalPresentationStyle = .fullScreen
+        present(questionVC, animated: true)
+    }
 }
 
 // MARK: -  Private Methods
@@ -90,11 +88,23 @@ private extension StartViewController {
     }
     
     func createButton() -> UIButton {
-        let button = UIButton(type: .system)
+        let button = UIButton(type: .system, primaryAction: buttonAction)
         button.setTitle("Начать опрос", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 20)
         
         return button
+    }
+    
+    func createStackView(subviews: [UIView]) -> UIStackView {
+        
+        let stackView = UIStackView(arrangedSubviews: subviews)
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = 16
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
     }
 }
 
