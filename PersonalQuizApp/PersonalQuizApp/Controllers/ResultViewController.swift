@@ -11,8 +11,6 @@ import UIKit
 final class ResultViewController: UIViewController {
     
     // MARK: -  Private Properties
-    private let first = 0
-    private let second = 1
     
     // MARK: -  UI Elements
     private lazy var resultLabels: [UILabel] = {
@@ -26,7 +24,7 @@ final class ResultViewController: UIViewController {
     
     private lazy var resultStackView: UIStackView = {
         createStackView(
-            subviews: [resultLabels[first], resultLabels[second]]
+            subviews: resultLabels
         )
     }()
     
