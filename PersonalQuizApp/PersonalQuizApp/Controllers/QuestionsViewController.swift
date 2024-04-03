@@ -1,5 +1,5 @@
 //
-//  QuestionViewController.swift
+//  QuestionsViewController.swift
 //  PersonalQuizApp
 //
 //  Created by Matvei Khlestov on 02.04.2024.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-// MARK: -  QuestionViewController
-final class QuestionViewController: UIViewController {
+// MARK: -  QuestionsViewController
+final class QuestionsViewController: UIViewController {
     
     // MARK: -  Private Properties
     private let first = 0
@@ -155,7 +155,7 @@ final class QuestionViewController: UIViewController {
 }
 
 // MARK: -  Private Methods
-private extension QuestionViewController {
+private extension QuestionsViewController {
     func setupView() {
         view.backgroundColor = .white
         addSubviews()
@@ -250,7 +250,7 @@ private extension QuestionViewController {
 }
 
 // MARK: -  Constraints
-private extension QuestionViewController {
+private extension QuestionsViewController {
     func setConstraints() {
         setConstraintsForProgressView()
         setConstraintsForQuestionLabel()

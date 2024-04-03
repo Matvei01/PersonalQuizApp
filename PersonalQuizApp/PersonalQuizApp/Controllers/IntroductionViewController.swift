@@ -1,5 +1,5 @@
 //
-//  StartViewController.swift
+//  IntroductionViewController.swift
 //  PersonalQuizApp
 //
 //  Created by Matvei Khlestov on 02.04.2024.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-// MARK: -  StartViewController
-final class StartViewController: UIViewController {
+// MARK: -  IntroductionViewController
+final class IntroductionViewController: UIViewController {
     
     // MARK: -  Private Properties
     private let first = 0
@@ -55,7 +55,7 @@ final class StartViewController: UIViewController {
 }
 
 // MARK: -  Private Methods
-private extension StartViewController {
+private extension IntroductionViewController {
     func setupView() {
         view.backgroundColor = .white
         addSubviews()
@@ -108,7 +108,7 @@ private extension StartViewController {
 }
 
 // MARK: -  Constraints
-private extension StartViewController {
+private extension IntroductionViewController {
     func setConstraints() {
         setConstraintsForAnimalLabels()
         setConstraintsForStartStackView()
