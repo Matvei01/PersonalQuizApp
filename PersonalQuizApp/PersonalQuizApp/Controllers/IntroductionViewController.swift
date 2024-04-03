@@ -11,10 +11,7 @@ import UIKit
 final class IntroductionViewController: UIViewController {
     
     // MARK: -  Private Properties
-    private let first = 0
-    private let second = 1
-    private let third = 2
-    private let fourth = 3
+    
     
     // MARK: -  UI Elements
     private lazy var animalLabels: [UILabel] = {
@@ -42,7 +39,7 @@ final class IntroductionViewController: UIViewController {
     
     // MARK: -  Action
     private lazy var buttonAction = UIAction { [ unowned self ] _ in
-        let questionVC = UINavigationController(rootViewController: QuestionViewController())
+        let questionVC = UINavigationController(rootViewController: QuestionsViewController())
         questionVC.modalPresentationStyle = .fullScreen
         present(questionVC, animated: true)
     }
@@ -63,13 +60,12 @@ private extension IntroductionViewController {
     }
     
     func addSubviews() {
-        setupSubviews(
-            animalLabels[first],
-            animalLabels[second],
-            animalLabels[third],
-            animalLabels[fourth],
-            startStackView
-        )
+        for animalLabel in self.animalLabels {
+            setupSubviews(
+                animalLabel,
+                startStackView
+            )
+        }
     }
     
     func setupSubviews(_ subviews: UIView... ) {
@@ -115,47 +111,57 @@ private extension IntroductionViewController {
     }
     //Нужно оптимизировать
     func setConstraintsForAnimalLabels() {
-        NSLayoutConstraint.activate([
-            animalLabels[first].topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20
-            ),
-            animalLabels[first].leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20
-            )
-        ])
-        
-        NSLayoutConstraint.activate([
-            animalLabels[second].topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20
-            ),
-            animalLabels[second].trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20
-            )
-        ])
-        
-        NSLayoutConstraint.activate([
-            animalLabels[third].bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20
-            ),
-            animalLabels[third].leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20
-            )
-        ])
-        
-        NSLayoutConstraint.activate([
-            animalLabels[fourth].bottomAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20
-            ),
-            animalLabels[fourth].trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20
-            )
-        ])
+        for (index, label) in animalLabels.enumerated() {
+            
+            switch index {
+            case 0:
+                NSLayoutConstraint.activate([
+                    label.topAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20
+                    ),
+                    label.leadingAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20
+                    )
+                ])
+            case 1:
+                NSLayoutConstraint.activate([
+                    label.topAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20
+                    ),
+                    label.trailingAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20
+                    )
+                ])
+            case 2:
+                NSLayoutConstraint.activate([
+                    label.bottomAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20
+                    ),
+                    label.leadingAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20
+                    )
+                ])
+            default:
+                NSLayoutConstraint.activate([
+                    label.bottomAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20
+                    ),
+                    label.trailingAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20
+                    )
+                ])
+            }
+        }
     }
     
     func setConstraintsForStartStackView() {
         NSLayoutConstraint.activate([
-            startStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            startStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            startStackView.centerXAnchor.constraint(
+                equalTo: view.centerXAnchor
+            ),
+            startStackView.centerYAnchor.constraint(
+                equalTo: view.centerYAnchor
+            )
         ])
     }
 }

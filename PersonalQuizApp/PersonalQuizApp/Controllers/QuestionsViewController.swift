@@ -11,10 +11,6 @@ import UIKit
 final class QuestionsViewController: UIViewController {
     
     // MARK: -  Private Properties
-    private let first = 0
-    private let second = 1
-    private let third = 2
-    private let fourth = 3
     
     // MARK: -  UI Elements
     private lazy var questionProgressView: UIProgressView = {
@@ -42,12 +38,7 @@ final class QuestionsViewController: UIViewController {
     
     private lazy var singleStackView: UIStackView = {
         createStackView(
-            subviews: [
-                singleButtons[first],
-                singleButtons[second],
-                singleButtons[third],
-                singleButtons[fourth]
-            ]
+            subviews: singleButtons
         )
     }()
     
@@ -77,39 +68,8 @@ final class QuestionsViewController: UIViewController {
         createButton(title: "Ответить")
     }()
     
-    private lazy var secondaryMultipleStackViews: [UIStackView] = {
-        let stackViews = [
-            createSecondaryStackView(
-                subviews: [multipleLabels[first], multipleSwitches[first]],
-                distribution: .fill, spacing: 0
-            ),
-            createSecondaryStackView(
-                subviews: [multipleLabels[second], multipleSwitches[second]],
-                distribution: .fill, spacing: 0
-            ),
-            createSecondaryStackView(
-                subviews: [multipleLabels[third], multipleSwitches[third]],
-                distribution: .fill, spacing: 0
-            ),
-            createSecondaryStackView(
-                subviews: [multipleLabels[fourth], multipleSwitches[fourth]],
-                distribution: .fill, spacing: 0
-            )
-        ]
-        
-        return stackViews
-    }()
-    
     private lazy var multipleStackView: UIStackView = {
-        createStackView(
-            subviews: [
-                secondaryMultipleStackViews[first],
-                secondaryMultipleStackViews[second],
-                secondaryMultipleStackViews[third],
-                secondaryMultipleStackViews[fourth],
-                multipleAnswerButton
-            ]
-        )
+        createStackView(subviews: createMultipleSubviews())
     }()
     
     private lazy var rangedSlider: UISlider = {
@@ -132,17 +92,15 @@ final class QuestionsViewController: UIViewController {
         return labels
     }()
     
-    private lazy var secondaryRangedStackView: UIStackView = {
-        createSecondaryStackView(
-            subviews: [rangedLabels[first], rangedLabels[second]],
-            distribution: .fillEqually,
-            spacing: 23
+    private lazy var childRangedStackView: UIStackView = {
+        createChildStackView(
+            subviews: rangedLabels
         )
     }()
     
     private lazy var rangedStackView: UIStackView = {
         createStackView(
-            subviews: [rangedSlider, secondaryRangedStackView, rangedButton]
+            subviews: [rangedSlider, childRangedStackView, rangedButton]
         )
     }()
     
@@ -162,8 +120,8 @@ private extension QuestionsViewController {
         setupNavigationController()
         setConstraints()
         
-        singleStackView.isHidden = true
-        multipleStackView.isHidden = false
+        singleStackView.isHidden = false
+        multipleStackView.isHidden = true
         rangedStackView.isHidden = true
     }
     
@@ -217,15 +175,12 @@ private extension QuestionsViewController {
         return button
     }
     
-    func createSecondaryStackView(subviews: [UIView],
-                                  distribution: UIStackView.Distribution,
-                                  spacing: CGFloat) -> UIStackView {
-        
+    func createChildStackView(subviews: [UIView]) -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: subviews)
         stackView.axis = .horizontal
         stackView.alignment = .fill
-        stackView.distribution = distribution
-        stackView.spacing = spacing
+        stackView.distribution = .fillEqually
+        stackView.spacing = 0
         
         return stackView
     }
@@ -239,6 +194,20 @@ private extension QuestionsViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
+    }
+    
+    func createMultipleSubviews() -> [UIView] {
+        var subviews: [UIView] = []
+        for (index, label) in multipleLabels.enumerated() {
+            let stackView = UIStackView(arrangedSubviews: [label, multipleSwitches[index]])
+            stackView.axis = .horizontal
+            stackView.alignment = .fill
+            stackView.distribution = .fill
+            stackView.spacing = 0
+            subviews.append(stackView)
+        }
+        subviews.append(multipleAnswerButton)
+        return subviews
     }
     
     func createSwitch() -> UISwitch {
