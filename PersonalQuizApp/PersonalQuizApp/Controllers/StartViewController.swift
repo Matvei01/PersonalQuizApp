@@ -36,21 +36,21 @@ final class StartViewController: UIViewController {
         createButton()
     }()
     
-    // MARK: -  Override Methods
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupView()
-    }
-    
     private lazy var startStackView: UIStackView = {
         createStackView(subviews: [questionLabel, startPollButton])
     }()
-        
+    
     // MARK: -  Action
     private lazy var buttonAction = UIAction { [ unowned self ] _ in
         let questionVC = UINavigationController(rootViewController: QuestionViewController())
         questionVC.modalPresentationStyle = .fullScreen
         present(questionVC, animated: true)
+    }
+    
+    // MARK: -  Override Methods
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupView()
     }
 }
 
@@ -96,7 +96,6 @@ private extension StartViewController {
     }
     
     func createStackView(subviews: [UIView]) -> UIStackView {
-        
         let stackView = UIStackView(arrangedSubviews: subviews)
         stackView.axis = .vertical
         stackView.alignment = .fill

@@ -114,6 +114,7 @@ final class QuestionViewController: UIViewController {
     
     private lazy var rangedSlider: UISlider = {
         let slider = UISlider()
+        slider.value = 0.5
         
         return slider
     }()
@@ -162,8 +163,8 @@ private extension QuestionViewController {
         setConstraints()
         
         singleStackView.isHidden = true
-        multipleStackView.isHidden = true
-        rangedStackView.isHidden = false
+        multipleStackView.isHidden = false
+        rangedStackView.isHidden = true
     }
     
     func addSubviews() {
@@ -242,6 +243,7 @@ private extension QuestionViewController {
     
     func createSwitch() -> UISwitch {
         let multipleSwitch = UISwitch()
+        multipleSwitch.isOn = true
         
         return multipleSwitch
     }
