@@ -25,7 +25,6 @@ final class QuestionsViewController: UIViewController {
     
     private lazy var questionLabel: UILabel = {
         createLabel(
-            text: "Какую пищу предпочитаете?",
             font: .systemFont(ofSize: 20),
             autoresizing: false
         )
@@ -33,10 +32,10 @@ final class QuestionsViewController: UIViewController {
     
     private lazy var singleButtons: [UIButton] = {
         let buttons = [
-            createButton(title: "Стейк", action: singleAnswerButtonPressed),
-            createButton(title: "Рыба", action: singleAnswerButtonPressed),
-            createButton(title: "Морковь", action: singleAnswerButtonPressed),
-            createButton(title: "Кукуруза", action: singleAnswerButtonPressed)
+            createButton(action: singleAnswerButtonAction),
+            createButton(action: singleAnswerButtonAction),
+            createButton(action: singleAnswerButtonAction),
+            createButton(action: singleAnswerButtonAction)
         ]
         
         return buttons
@@ -50,10 +49,10 @@ final class QuestionsViewController: UIViewController {
     
     private lazy var multipleLabels: [UILabel] = {
         let labels = [
-            createLabel(text: "Плавать", font: .systemFont(ofSize: 17)),
-            createLabel(text: "Спать", font: .systemFont(ofSize: 17)),
-            createLabel(text: "Обниматься", font: .systemFont(ofSize: 17)),
-            createLabel(text: "Есть", font: .systemFont(ofSize: 17))
+            createLabel(font: .systemFont(ofSize: 17)),
+            createLabel(font: .systemFont(ofSize: 17)),
+            createLabel(font: .systemFont(ofSize: 17)),
+            createLabel(font: .systemFont(ofSize: 17))
         ]
         
         return labels
@@ -71,7 +70,7 @@ final class QuestionsViewController: UIViewController {
     }()
     
     private lazy var multipleAnswerButton: UIButton = {
-        createButton(title: "Ответить", action: multipleAnswerButtonPressed)
+        createButton(title: "Ответить", action: multipleAnswerButtonAction)
     }()
     
     private lazy var multipleStackView: UIStackView = {
@@ -80,7 +79,7 @@ final class QuestionsViewController: UIViewController {
     
     private lazy var rangedSlider: UISlider = {
         let answerCount = Float(currentAnswers.count - 1)
-    
+        
         let slider = UISlider()
         slider.maximumValue = answerCount
         slider.value = answerCount / 2
@@ -89,13 +88,13 @@ final class QuestionsViewController: UIViewController {
     }()
     
     private lazy var rangedButton: UIButton = {
-        createButton(title: "Ответить", action: rangedAnswerButtonPressed)
+        createButton(title: "Ответить", action: rangedAnswerButtonAction)
     }()
     
     private lazy var rangedLabels: [UILabel] = {
         let labels = [
-            createLabel(text: "Ненавижу", font: .systemFont(ofSize: 17)),
-            createLabel(text: "Обожаю", font: .systemFont(ofSize: 17), alignment: .right)
+            createLabel(font: .systemFont(ofSize: 17)),
+            createLabel(font: .systemFont(ofSize: 17), alignment: .right)
         ]
         
         return labels
@@ -114,32 +113,16 @@ final class QuestionsViewController: UIViewController {
     }()
     
     // MARK: -  Action
-    private lazy var singleAnswerButtonPressed = UIAction { [ unowned self ] action in
-        guard let sender = action.sender as? UIButton else { return }
-        guard let buttonIndex = singleButtons.firstIndex(of: sender) else { return }
-        
-        let currentAnswer = currentAnswers[buttonIndex]
-        answersChosen.append(currentAnswer)
-        
-        nextQuestion()
-        
+    private lazy var singleAnswerButtonAction = UIAction { [ unowned self ] action in
+        singleAnswerButtonPressed(action)
     }
     
-    private lazy var multipleAnswerButtonPressed = UIAction { [ unowned self ] _ in
-        for (multipleSwitch, answer) in zip(multipleSwitches, currentAnswers) {
-            if multipleSwitch.isOn {
-                answersChosen.append(answer)
-            }
-        }
-        
-        nextQuestion()
+    private lazy var multipleAnswerButtonAction = UIAction { [ unowned self ] _ in
+        multipleAnswerButtonPressed()
     }
     
-    private lazy var rangedAnswerButtonPressed = UIAction { [ unowned self ] _ in
-        let index = lrintf(rangedSlider.value)
-        answersChosen.append(currentAnswers[index])
-        
-        nextQuestion()
+    private lazy var rangedAnswerButtonAction = UIAction { [ unowned self ] _ in
+        rangedAnswerButtonPressed()
     }
     
     
@@ -244,12 +227,37 @@ private extension QuestionsViewController {
         navigationController?.pushViewController(resultVC, animated: true)
     }
     
-    func createLabel(text: String,
-                     font: UIFont, autoresizing: Bool? = nil,
+    func singleAnswerButtonPressed(_ action: UIAction) {
+        guard let sender = action.sender as? UIButton else { return }
+        guard let buttonIndex = singleButtons.firstIndex(of: sender) else { return }
+        
+        let currentAnswer = currentAnswers[buttonIndex]
+        answersChosen.append(currentAnswer)
+        
+        nextQuestion()
+    }
+    
+    func multipleAnswerButtonPressed() {
+        for (multipleSwitch, answer) in zip(multipleSwitches, currentAnswers) {
+            if multipleSwitch.isOn {
+                answersChosen.append(answer)
+            }
+        }
+        
+        nextQuestion()
+    }
+    
+    func rangedAnswerButtonPressed() {
+        let index = lrintf(rangedSlider.value)
+        answersChosen.append(currentAnswers[index])
+        
+        nextQuestion()
+    }
+    
+    func createLabel(font: UIFont, autoresizing: Bool? = nil,
                      alignment: NSTextAlignment? = nil) -> UILabel {
         
         let label = UILabel()
-        label.text = text
         label.font = font
         label.textAlignment = alignment ?? .left
         label.translatesAutoresizingMaskIntoConstraints = autoresizing ?? true
@@ -264,7 +272,7 @@ private extension QuestionsViewController {
         return progressView
     }
     
-    func createButton(title: String, action: UIAction? = nil) -> UIButton {
+    func createButton(title: String? = nil, action: UIAction) -> UIButton {
         let button = UIButton(type: .system, primaryAction: action)
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16)
@@ -320,9 +328,7 @@ private extension QuestionsViewController {
     func setConstraints() {
         setConstraintsForProgressView()
         setConstraintsForQuestionLabel()
-        setConstraintsForSingleStackView()
-        setConstraintsForMultipleStackView()
-        setConstraintsForRangedStackView()
+        setConstraintsForStackViews()
     }
     
     func setConstraintsForProgressView() {
@@ -356,47 +362,35 @@ private extension QuestionsViewController {
         ])
     }
     
-    func setConstraintsForSingleStackView() {
-        NSLayoutConstraint.activate([
-            singleStackView.centerXAnchor.constraint(
-                equalTo: view.centerXAnchor
-            ),
-            singleStackView.centerYAnchor.constraint(
-                equalTo: view.centerYAnchor
-            )
-        ])
-    }
-    
-    func setConstraintsForMultipleStackView() {
-        NSLayoutConstraint.activate([
-            multipleStackView.centerYAnchor.constraint(
-                equalTo: view.centerYAnchor
-            ),
-            multipleStackView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 16
-            ),
-            multipleStackView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: -16
-            )
-        ])
-    }
-    
-    func setConstraintsForRangedStackView() {
-        NSLayoutConstraint.activate([
-            rangedStackView.centerYAnchor.constraint(
-                equalTo: view.centerYAnchor
-            ),
-            rangedStackView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 16
-            ),
-            rangedStackView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: -16
-            )
-        ])
+    func setConstraintsForStackViews() {
+        let stackViews = [singleStackView, multipleStackView, rangedStackView]
+        
+        for (index,stackView) in stackViews.enumerated() {
+            if index == 0 {
+                NSLayoutConstraint.activate([
+                    stackView.centerXAnchor.constraint(
+                        equalTo: view.centerXAnchor
+                    ),
+                    stackView.centerYAnchor.constraint(
+                        equalTo: view.centerYAnchor
+                    )
+                ])
+            } else {
+                NSLayoutConstraint.activate([
+                    stackView.centerYAnchor.constraint(
+                        equalTo: view.centerYAnchor
+                    ),
+                    stackView.leadingAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                        constant: 16
+                    ),
+                    stackView.trailingAnchor.constraint(
+                        equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                        constant: -16
+                    )
+                ])
+            }
+        }
     }
 }
 

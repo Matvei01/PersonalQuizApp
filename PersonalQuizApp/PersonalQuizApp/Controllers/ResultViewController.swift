@@ -13,17 +13,13 @@ final class ResultViewController: UIViewController {
     // MARK: -  Public Properties
     var answers: [Answer]!
     
-    // MARK: -  Private Properties
-    
     // MARK: -  UI Elements
     private lazy var resultLabels: [UILabel] = {
         let labels = [
             createLabel(
-                text: "Вы - 🐙!",
                 font: .systemFont(ofSize: 50)
             ),
             createLabel(
-                text: "Вы осьминог!",
                 font: .systemFont(ofSize: 17),
                 alignment: .justified,
                 lines: 0
@@ -57,9 +53,8 @@ private extension ResultViewController {
         view.backgroundColor = .white
         addSubviews()
         setupNavigationController()
-        setConstraints()
-        
         updateResult()
+        setConstraints()
     }
     
     func addSubviews() {
@@ -112,13 +107,11 @@ private extension ResultViewController {
         navigationItem.hidesBackButton = true
     }
     
-    func createLabel(text: String,
-                     font: UIFont,
+    func createLabel(font: UIFont,
                      alignment: NSTextAlignment? = nil,
                      lines: Int? = nil) -> UILabel {
         
         let label = UILabel()
-        label.text = text
         label.font = font
         label.textAlignment = alignment ?? .left
         label.numberOfLines = lines ?? 1
