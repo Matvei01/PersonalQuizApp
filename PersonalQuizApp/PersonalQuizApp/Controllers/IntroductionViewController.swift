@@ -10,9 +10,6 @@ import UIKit
 // MARK: -  IntroductionViewController
 final class IntroductionViewController: UIViewController {
     
-    // MARK: -  Private Properties
-    
-    
     // MARK: -  UI Elements
     private lazy var animalLabels: [UILabel] = {
         let labels = [
@@ -61,17 +58,10 @@ private extension IntroductionViewController {
     
     func addSubviews() {
         for animalLabel in self.animalLabels {
-            setupSubviews(
-                animalLabel,
-                startStackView
-            )
+            view.addSubview(animalLabel)
         }
-    }
-    
-    func setupSubviews(_ subviews: UIView... ) {
-        for subview in subviews {
-            view.addSubview(subview)
-        }
+        
+        view.addSubview(startStackView)
     }
     
     func createLabel(text: String, autoresizing: Bool? = nil ) -> UILabel {
@@ -109,7 +99,7 @@ private extension IntroductionViewController {
         setConstraintsForAnimalLabels()
         setConstraintsForStartStackView()
     }
-    //Нужно оптимизировать
+    
     func setConstraintsForAnimalLabels() {
         for (index, label) in animalLabels.enumerated() {
             
